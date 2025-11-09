@@ -115,30 +115,134 @@ export default function Home({}: Route.ComponentProps) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
+      /* ==============================
+       1. WebSite Schema
+    ===============================*/
       {
         "@type": "WebSite",
         name: "iLoveRides",
         url: "https://www.iloverides.com",
         description:
-          "Explore global amusement parks, roller coasters, zoos, and aquariums with verified stats, comparisons, and travel tools.",
+          "Explore global amusement parks, roller coasters, zoos, aquariums, and water parks with verified stats, comparisons, and travel tools.",
         potentialAction: {
           "@type": "SearchAction",
           target: "https://www.iloverides.com/?q={search_term_string}",
           "query-input": "required name=search_term_string",
         },
       },
+
+      /* ==============================
+       2. Organization Schema
+    ===============================*/
       {
         "@type": "Organization",
         name: "iLoveRides",
         url: "https://www.iloverides.com",
         logo: "https://www.iloverides.com/iloverides-logo.png",
       },
+
+      /* ==============================
+       3. CollectionPage (Homepage Hub)
+    ===============================*/
+      {
+        "@type": "CollectionPage",
+        name: "iLoveRides Attraction Encyclopedia",
+        url: "https://www.iloverides.com",
+        description:
+          "A data-driven encyclopedia covering theme parks, roller coasters, water parks, zoos, aquariums, travel tools, ride stats, and comparison pages.",
+        about: [
+          { "@type": "TouristAttraction", name: "Theme Parks" },
+          { "@type": "TouristAttraction", name: "Roller Coasters" },
+          { "@type": "TouristAttraction", name: "Zoos" },
+          { "@type": "TouristAttraction", name: "Aquariums" },
+          { "@type": "TouristAttraction", name: "Water Parks" },
+        ],
+      },
+
+      /* ==============================
+       4. ItemList of Main Categories
+       (Google LOVES this for sitelinks)
+    ===============================*/
+      {
+        "@type": "ItemList",
+        name: "iLoveRides Content Hubs",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Parks & Resorts",
+            url: "https://www.iloverides.com/parks",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Rides Database",
+            url: "https://www.iloverides.com/rides",
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: "Zoos",
+            url: "https://www.iloverides.com/zoos",
+          },
+          {
+            "@type": "ListItem",
+            position: 4,
+            name: "Aquariums",
+            url: "https://www.iloverides.com/aquariums",
+          },
+          {
+            "@type": "ListItem",
+            position: 5,
+            name: "Water Parks",
+            url: "https://www.iloverides.com/water-parks",
+          },
+          {
+            "@type": "ListItem",
+            position: 6,
+            name: "Ride Comparisons",
+            url: "https://www.iloverides.com/compare",
+          },
+          {
+            "@type": "ListItem",
+            position: 7,
+            name: "Interactive Maps",
+            url: "https://www.iloverides.com/maps",
+          },
+          {
+            "@type": "ListItem",
+            position: 8,
+            name: "Ride Calculators",
+            url: "https://www.iloverides.com/ride-calculators",
+          },
+          {
+            "@type": "ListItem",
+            position: 9,
+            name: "Travel Math Tools",
+            url: "https://www.iloverides.com/travel-math",
+          },
+          {
+            "@type": "ListItem",
+            position: 10,
+            name: "Events & Openings",
+            url: "https://www.iloverides.com/events",
+          },
+        ],
+      },
+
+      /* ==============================
+       5. FAQPage Schema
+       (Your existing FAQ data)
+    ===============================*/
       {
         "@type": "FAQPage",
         mainEntity: faqs.map((f) => ({
           "@type": "Question",
           name: f.q,
-          acceptedAnswer: { "@type": "Answer", text: f.a },
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: f.a,
+          },
         })),
       },
     ],
@@ -214,7 +318,7 @@ export default function Home({}: Route.ComponentProps) {
           <div className="mt-8 flex flex-wrap gap-3">
             <a
               href="/rides-by-speed"
-              className="rounded-xl bg-emerald-600 px-5 py-3 text-base font-semibold text-white hover:brightness-110"
+              className="rounded-xl bg-rose-600 px-5 py-3 text-base font-semibold text-white hover:brightness-110"
             >
               Fastest rides
             </a>
@@ -245,7 +349,7 @@ export default function Home({}: Route.ComponentProps) {
             >
               <h3 className="text-lg font-semibold text-[#1E3A5F]">{c.t}</h3>
               <p className="mt-3 text-base text-slate-700">{c.d}</p>
-              <div className="mt-3 text-sm font-semibold text-emerald-600 group-hover:translate-x-0.5 transition">
+              <div className="mt-3 text-sm font-semibold text-rose-600 group-hover:translate-x-0.5 transition">
                 Explore →
               </div>
             </a>
@@ -254,7 +358,7 @@ export default function Home({}: Route.ComponentProps) {
       </section>
 
       {/* FEATURES */}
-      <section className="mx-auto max-w-6xl px-4 py-14">
+      <section className="mx-auto max-w-6xl px-4">
         <h2 className="text-3xl font-bold text-[#1E3A5F]">
           What you can explore
         </h2>
@@ -277,27 +381,193 @@ export default function Home({}: Route.ComponentProps) {
         </div>
       </section>
 
-      {/* CTA / HUB LINKS */}
-      <section className="mx-auto max-w-6xl px-4 pb-16">
-        <div className="rounded-2xl border-[2px] border-[#1E3A5F] bg-[#1E3A5F] p-8 shadow-sm text-white">
-          <h2 className="text-2xl font-bold">Start your thrill exploration</h2>
-          <p className="mt-3 text-base text-slate-200 max-w-2xl">
-            Browse through every attraction category, from roller coasters and
-            water parks to zoos, aquariums, and interactive travel tools.
-          </p>
+      {/* SEO RICH CONTENT */}
+      <section className="max-w-6xl mx-auto px-4 pt-16">
+        <h2 className="text-3xl font-bold text-[#1E3A5F] mb-4">
+          Explore Global Theme Parks, Rides, and Attractions
+        </h2>
+        <p className="text-slate-700 text-base leading-relaxed mb-6">
+          iLoveRides is a data-driven encyclopedia built for ride enthusiasts,
+          travelers, and engineering fans. Explore verified stats for theme
+          parks, roller coasters, zoos, aquariums, and water parks across the
+          United States, Canada, United Kingdom, Japan, France, China, and
+          Australia. Every attraction includes reliable details such as top
+          speed, ride height, G-force, track length, manufacturer, opening year,
+          and intensity level.
+        </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            {hubLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="rounded-xl bg-emerald-600 px-4 py-2 text-base font-semibold text-white hover:brightness-110"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
+        <h3 className="text-2xl font-semibold text-[#1E3A5F] mt-8 mb-3">
+          What You Can Explore on iLoveRides
+        </h3>
+        <ul className="list-disc ml-6 text-slate-700 space-y-2">
+          <li>
+            Theme park profiles with maps, attraction lists, and quick facts.
+          </li>
+          <li>
+            Roller coaster database with speed, height, layout, and stats.
+          </li>
+          <li>
+            Rides sorted by speed, height, drop angle, duration, and region.
+          </li>
+          <li>
+            Zoo and aquarium databases featuring major exhibits and habitats.
+          </li>
+          <li>
+            Water park attractions, tall slides, and aquatic thrill features.
+          </li>
+          <li>
+            Events calendar for openings, refurbishments, festivals, and
+            seasonal shows.
+          </li>
+          <li>
+            Interactive ride comparison tools such as
+            <a
+              href="/compare/space-mountain-vs-incredicoaster"
+              className="text-rose-600 pl-1 hover:underline"
+            >
+              Space Mountain vs. Incredicoaster
+            </a>
+            .
+          </li>
+          <li>
+            Travel Math tools including driving distance, flight time, cost
+            estimates, and multi-stop planners.
+          </li>
+          <li>
+            Sortable tables like “Fastest Roller Coasters in Asia” and “Tallest
+            Coasters in the US.”
+          </li>
+        </ul>
+
+        <h3 className="text-2xl font-semibold text-[#1E3A5F] mt-10 mb-3">
+          Explore Our Attraction Categories
+        </h3>
+        <p className="text-slate-700 mb-4">
+          All attraction pages are grouped into clean, search-friendly hubs:
+        </p>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 text-slate-700">
+          <a
+            href="/parks"
+            className="p-4 rounded-xl border border-slate-200 bg-white hover:shadow-sm transition"
+          >
+            Theme Parks & Resorts
+          </a>
+          <a
+            href="/rides"
+            className="p-4 rounded-xl border border-slate-200 bg-white hover:shadow-sm transition"
+          >
+            Roller Coasters & Rides
+          </a>
+          <a
+            href="/zoos"
+            className="p-4 rounded-xl border border-slate-200 bg-white hover:shadow-sm transition"
+          >
+            Zoos & Wildlife Parks
+          </a>
+          <a
+            href="/aquariums"
+            className="p-4 rounded-xl border border-slate-200 bg-white hover:shadow-sm transition"
+          >
+            Aquariums
+          </a>
+          <a
+            href="/water-parks"
+            className="p-4 rounded-xl border border-slate-200 bg-white hover:shadow-sm transition"
+          >
+            Water Parks
+          </a>
+          <a
+            href="/maps"
+            className="p-4 rounded-xl border border-slate-200 bg-white hover:shadow-sm transition"
+          >
+            Interactive Maps
+          </a>
+          <a
+            href="/compare"
+            className="p-4 rounded-xl border border-slate-200 bg-white hover:shadow-sm transition"
+          >
+            Ride Comparisons
+          </a>
+          <a
+            href="/ride-calculators"
+            className="p-4 rounded-xl border border-slate-200 bg-white hover:shadow-sm transition"
+          >
+            Ride Calculators
+          </a>
+          <a
+            href="/events"
+            className="p-4 rounded-xl border border-slate-200 bg-white hover:shadow-sm transition"
+          >
+            Events & Openings
+          </a>
         </div>
+
+        <h3 className="text-2xl font-semibold text-[#1E3A5F] mt-10 mb-3">
+          Advanced Travel Planning Tools
+        </h3>
+        <p className="text-slate-700 leading-relaxed">
+          Plan your theme park trips using built-in Travel Math pages inspired
+          by tools like TravelMath.com. Whether you're calculating miles between
+          Disneyland and Universal Hollywood, flight duration to Tokyo Disney
+          Resort, or the total cost of a multi-park vacation, iLoveRides makes
+          travel math simple.
+        </p>
+      </section>
+
+      {/* SEO Section: Coverage Overview */}
+      <section className="mx-auto max-w-6xl px-4 py-12">
+        <h2 className="text-3xl font-bold text-[#1E3A5F] mb-4">
+          What iLoveRides Covers
+        </h2>
+        <p className="text-slate-700 text-base leading-relaxed max-w-3xl">
+          iLoveRides is a data-focused attraction encyclopedia built to help you
+          explore the world of theme parks, roller coasters, water parks, zoos,
+          aquariums, and thrill rides. Our database highlights verified
+          statistics such as speed, height, manufacturer, drop angle, duration,
+          and ride type, along with attraction categories found in major regions
+          including the United States, Canada, the United Kingdom, France,
+          Japan, China, and Australia. Whether you enjoy high-intensity launch
+          coasters, dark rides, family attractions, or wildlife exhibits, the
+          platform organizes everything in a clear and searchable structure.
+        </p>
+      </section>
+
+      {/* SEO Section: Data Process */}
+      <section className="mx-auto max-w-6xl px-4 py-12">
+        <h2 className="text-3xl font-bold text-[#1E3A5F] mb-4">
+          How We Verify Ride and Attraction Data
+        </h2>
+        <p className="text-slate-700 text-base leading-relaxed max-w-3xl">
+          Ride and attraction data is compiled using multiple trusted sources,
+          including manufacturer specifications, park-released information,
+          public engineering documents, and historical industry records. Each
+          entry is reviewed for accuracy before being published so that the
+          statistics shown reflect real, measurable performance numbers. This
+          includes height, maximum speed, track layout, launch systems, braking
+          systems, and operational notes for roller coasters, as well as habitat
+          details and exhibit highlights for zoos and aquariums. The goal is to
+          maintain an encyclopedia that is both educational and technically
+          accurate.
+        </p>
+      </section>
+
+      {/* SEO Section: Comparison Purpose */}
+      <section className="mx-auto max-w-6xl px-4 pb-12">
+        <h2 className="text-3xl font-bold text-[#1E3A5F] mb-4">
+          Why Compare Rides and Attractions?
+        </h2>
+        <p className="text-slate-700 text-base leading-relaxed max-w-3xl">
+          Comparing rides allows enthusiasts and travelers to understand how
+          different attractions stack up in terms of intensity, engineering, and
+          overall experience. Looking at speed, height, G-forces, layout
+          elements, and ride duration provides insight into how each attraction
+          is designed. For wildlife-focused visitors, comparing zoos and
+          aquariums helps highlight exhibit scale, species variety, and
+          conservation themes. Data-driven comparisons help visitors plan trips,
+          understand what to expect, and appreciate the engineering and design
+          choices that make each attraction unique.
+        </p>
       </section>
 
       {/* FAQ */}
